@@ -1,19 +1,18 @@
 ---
-version: '2.1'
+version: '3'
 services:
-  unifi-controller:
+  unifi:
     image: lscr.io/linuxserver/unifi-controller
-    container_name: unifi
+    restart: always
     environment:
+      - MEM_STARTUP=1024 #optional
+      - MEM_LIMIT=1024 #optional
       - PUID=1000
       - PGID=1000
-      - MEM_LIMIT=1024 #optional
-      - MEM_STARTUP=1024 #optional
-    volumes:
-      - /ui/config
     ports:
+      - 443:8443
       - 8080:8080
-      - 8443:8443
       - 3478:3478/udp
       - 10001:10001/udp
-    restart: unless-stopped
+    volumes:
+      - ./unifi:/config

@@ -10,9 +10,7 @@ sudo apt autoclean -y
 
 echo -e "${Colour}\n\nPi-hole will be installed now.\nThe initial configuration is interactive.\n\n${less}"
 curl -sSL https://install.pi-hole.net | bash
-
-echo -e "${Colour}\n\nOne more step is changing the password for the web interface of the Pi-hole.\n\n${less}"
-pihole -a -p
+pihole admin password
 
 echo -e "${Colour}\n\nTo finish the installation, a reboot is required.\n\n${less}"
 # sleep 3
