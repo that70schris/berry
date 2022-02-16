@@ -1,18 +1,34 @@
 ---
 version: '3'
 services:
-  unifi:
-    image: lscr.io/linuxserver/unifi-controller
+  homebridge:
+    image: oznu/homebridge:ubuntu
+    network_mode: host
     restart: always
     environment:
-      - MEM_STARTUP=1024 #optional
-      - MEM_LIMIT=1024 #optional
-      - PUID=1000
-      - PGID=1000
-    ports:
-      - 443:8443
-      - 8080:8080
-      - 3478:3478/udp
-      - 10001:10001/udp
+      PGID: 1000
+      PUID: 1000
+      HOMEBRIDGE_CONFIG_UI: 1
+      HOMEBRIDGE_CONFIG_UI_PORT: 8581
+      # TZ: Australia/Canberra
     volumes:
-      - ./unifi:/config
+      - ./homebridge:/homebridge
+  pihole:
+    container_name: pihole
+    image: pihole/pihole
+    restart: always
+    # For DHCP it is recommended to remove these ports and instead add:
+    # network_mode: "host"
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 67:67/udp
+      - 80:80/tcp
+    environment:
+      WEBPASSWORD: ''
+    # Volumes store your data between container upgrades
+    volumes:
+      - ./pihole:/etc/pihole
+      - ./dnsmasq.d:/etc/dnsmasq.d
+    cap_add:
+      - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN)
